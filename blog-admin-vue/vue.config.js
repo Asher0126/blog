@@ -15,7 +15,7 @@ const externals = {
   'axios': 'axios',
   'element-ui': 'ELEMENT',
   'js-cookie': 'Cookies',
- 'nprogress': 'NProgress'
+  'nprogress': 'NProgress'
 }
 
 const cdn = {
@@ -121,7 +121,7 @@ module.exports = {
     //   //   }
     //   // },
     // }
-    return myConfig;
+    return myConfig
   },
 
   chainWebpack: config => {
