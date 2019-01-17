@@ -14,6 +14,13 @@ class ManagerService extends Service {
     const manager = this.ctx.model.Manager;
     return await manager.findAll();
   }
+  async findByNamePass() {
+    const manager = this.ctx.model.Manager;
+    let { name, password } = this.ctx.request.body;
+
+    password = crypto.md5(password);
+    return await manager.findOne({ where: { name, password } });
+  }
   async create() {
     const manager = this.ctx.model.Manager;
     let { name, password } = this.ctx.request.body;
