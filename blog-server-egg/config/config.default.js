@@ -16,9 +16,11 @@ module.exports = appInfo => {
     database: 'blog',
   };
 
-  exports.security = {
+  config.security = {
+    // 关闭csrf
     csrf: {
       enable: false,
+      ignoreJSON: true,
     },
   };
 
@@ -35,6 +37,12 @@ module.exports = appInfo => {
       password: '',
       db: 0,
     },
+  };
+
+  // 允许跨域
+  config.cors = {
+    origin: '*',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
   };
 
   return config;
