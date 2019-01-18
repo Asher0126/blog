@@ -46,6 +46,7 @@ export const constantRouterMap = [
     meta: { title: '管理员', icon: 'example' },
     children: [{
       path: '',
+      name: 'manager-index',
       meta: { title: '管理员列表', icon: 'example' },
       component: () => import('@/views/manager/index')
     }]
