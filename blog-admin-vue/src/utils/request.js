@@ -31,7 +31,7 @@ service.interceptors.response.use(
      * errcode为非20000是抛错 可结合自己业务进行修改
      */
     const res = response.data
-    if (res.errcode !== 10000) {
+    if (res.errcode !== 0) {
       Message({
         message: res.errmsg,
         type: 'error',
