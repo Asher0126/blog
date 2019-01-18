@@ -21,6 +21,13 @@ class ManagerService extends Service {
     password = crypto.md5(password);
     return await manager.findOne({ where: { name, password } });
   }
+  async findByJWT() {
+    const manager = this.ctx.model.Manager;
+    const { token } = this.ctx.request.query;
+    const user = this.app.jwt.verify(token, this.app.config.secret);
+
+    return await manager.findById(user.id);
+  }
   async create() {
     const manager = this.ctx.model.Manager;
     let { name, password } = this.ctx.request.body;
