@@ -30,11 +30,24 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/dashboard',
     name: 'Dashboard',
-    meta: { title: 'Dashboard', icon: 'dashboard' },
+    meta: { title: 'Dashboard', icon: 'example' },
     children: [{
       path: 'dashboard',
-      meta: { title: 'Dashboard', icon: 'dashboard' },
+      meta: { title: 'Dashboard', icon: 'example' },
       component: () => import('@/views/dashboard/index')
+    }]
+  },
+
+  {
+    path: '/manager',
+    component: Layout,
+    redirect: '/manager',
+    name: 'manager',
+    meta: { title: '管理员', icon: 'example' },
+    children: [{
+      path: '',
+      meta: { title: '管理员列表', icon: 'example' },
+      component: () => import('@/views/manager/index')
     }]
   },
 
