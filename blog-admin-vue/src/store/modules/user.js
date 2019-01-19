@@ -30,7 +30,7 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
-          const data = response.data
+          const data = response
           console.log('data:', data)
           setToken(data.token)
           commit('SET_TOKEN', data.token)
@@ -45,7 +45,7 @@ const user = {
     GetInfo ({ commit, state }) {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(response => {
-          const data = response.data
+          const data = response
           /*
           // 目前不需要角色
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组

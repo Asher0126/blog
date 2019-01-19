@@ -59,8 +59,8 @@ export default {
     return {
       title: process.env.VUE_APP_TITLE,
       loginForm: {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: '123456'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],

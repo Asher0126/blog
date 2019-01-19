@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function fetchList(params) {
+export function fetchList (params) {
   return request({
     url: process.env.VUE_APP_MOCK_API + '/admin',
     method: 'get',
@@ -8,7 +8,7 @@ export function fetchList(params) {
   })
 }
 
-export function getArticleDetail(params) {
+export function getArticleDetail (params) {
   return request({
     url: process.env.VUE_APP_MOCK_API + '/admin',
     method: 'get',
@@ -16,7 +16,7 @@ export function getArticleDetail(params) {
   })
 }
 
-export function createArticle(params) {
+export function createArticle (params) {
   return request({
     url: process.env.VUE_APP_MOCK_API + '/admin',
     method: 'get',
@@ -24,7 +24,7 @@ export function createArticle(params) {
   })
 }
 
-export function updateArticle(params) {
+export function updateArticle (params) {
   return request({
     url: process.env.VUE_APP_MOCK_API + '/admin',
     method: 'get',
@@ -32,7 +32,7 @@ export function updateArticle(params) {
   })
 }
 
-export function fetchPv(params) {
+export function fetchPv (params) {
   return request({
     url: process.env.VUE_APP_MOCK_URL + '/admin',
     method: 'get',

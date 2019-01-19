@@ -39,16 +39,16 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/template',
+    path: '/manager',
     component: Layout,
-    redirect: '/template',
-    name: 'template',
-    meta: { title: '模版管理', icon: 'example' },
+    redirect: '/manager',
+    name: 'manager',
+    meta: { title: '管理员管理', icon: 'example' },
     children: [{
       path: '',
-      name: 'template-index',
-      meta: { title: '模版列表', icon: 'example' },
-      component: () => import('@/views/template/index')
+      name: 'manager-index',
+      meta: { title: '管理员列表', icon: 'example' },
+      component: () => import('@/views/manager/index')
     }]
   },
 
