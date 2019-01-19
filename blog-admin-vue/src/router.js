@@ -39,16 +39,16 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/manager',
+    path: '/template',
     component: Layout,
-    redirect: '/manager',
-    name: 'manager',
-    meta: { title: '管理员', icon: 'example' },
+    redirect: '/template',
+    name: 'template',
+    meta: { title: '模版管理', icon: 'example' },
     children: [{
       path: '',
-      name: 'manager-index',
-      meta: { title: '管理员列表', icon: 'example' },
-      component: () => import('@/views/manager/index')
+      name: 'template-index',
+      meta: { title: '模版列表', icon: 'example' },
+      component: () => import('@/views/template/index')
     }]
   },
 
@@ -56,7 +56,7 @@ export const constantRouterMap = [
 ]
 
 export default new Router({
-  // mode: 'history', //后端支持可开
+  mode: 'history', // 后端支持可开
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
