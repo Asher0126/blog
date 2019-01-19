@@ -4,8 +4,13 @@ const Controller = require('egg').Controller;
 
 class ManagerController extends Controller {
   async index() {
+    // 获取总条数
+    const total = await this.ctx.service.manager.count();
+    // 获取所有的数据
     const data = await this.ctx.service.manager.findAll();
-    this.ctx.body = { errcode: 0, errmsg: '', data };
+
+    // 拼装返回结果
+    this.ctx.body = { errcode: 0, errmsg: '', data: { total, data } };
   }
   async create() {
     await this.ctx.service.manager.create();

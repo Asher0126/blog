@@ -10,9 +10,32 @@ class ManagerService extends Service {
     const manager = this.ctx.model.Manager;
     return await manager.findById(id);
   }
-  async findAll() {
+  async count() {
     const manager = this.ctx.model.Manager;
-    return await manager.findAll();
+    return await manager.count();
+  }
+  async findAll() {
+    // page：当前页码， limit限制条数
+    let { page = 1, limit = 20, name, active } = this.ctx.request.query;
+    // offset：偏移条数
+    const offset = (page - 1) * limit;
+    // limit需要转换为数值类型
+    limit = Number(limit);
+
+    // 搜索条件
+    const where = {};
+
+    if (name) {
+      where.name = {
+        $like: `%${name}%`,
+      };
+    }
+    if (active === '0' || active === '1') {
+      where.active = active;
+    }
+
+    const manager = this.ctx.model.Manager;
+    return await manager.findAll({ limit, offset, where });
   }
   async findByNamePass() {
     const manager = this.ctx.model.Manager;
@@ -23,7 +46,10 @@ class ManagerService extends Service {
   }
   async findByJWT() {
     const manager = this.ctx.model.Manager;
-    const { token } = this.ctx.request.query;
+    // console.log(this.ctx.request.headers.authorization);
+    const { authorization } = this.ctx.request.headers;
+    const token = authorization.split(' ')[1];
+
     const user = this.app.jwt.verify(token, this.app.config.secret);
 
     return await manager.findById(user.id);
