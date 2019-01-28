@@ -8,7 +8,8 @@ module.exports = app => {
   router.get('/', controller.backend.home.index);
   router.post('/api/login', controller.backend.login.index);
   router.get('/api/info', controller.backend.login.info);
-  // router.post('/api/logout', controller.backend.login.logout);
+
+  router.post('/upload', controller.index.upload);
 
   router.patch('/api/manager/:id/active/:active', controller.backend.manager.active);
   router.resources('managers', '/api/manager', controller.backend.manager);
