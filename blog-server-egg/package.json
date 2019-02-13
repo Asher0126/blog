@@ -4,6 +4,7 @@
   "description": "blog",
   "private": true,
   "dependencies": {
+    "ali-oss": "^6.1.0",
     "egg": "^2.2.1",
     "egg-cors": "^2.1.2",
     "egg-jwt": "^3.1.4",

@@ -1,9 +1,14 @@
 'use strict';
 
 const Service = require('egg').Service;
+const path = require('path');
+const sendToWormhole = require('stream-wormhole');
 
 class FileService extends Service {
   async upload() {
+    // 2. 获取文件
+    const stream = await this.ctx.getFileStream();
+
     try {
       const OSS = require('ali-oss');
       const oss = new OSS({
@@ -16,21 +21,16 @@ class FileService extends Service {
 
       // 1. 引入所需对象
       const utils = require('../helper/utils');
-      const path = require('path');
-
-      // 2. 获取文件
-      const { files } = this.ctx.request;
-      const file = files[0];
-      console.log('service-upload:', file);
 
       // 3. 获取OSS所需参数
-      const objectName = utils.getFilename() + '.' + path.extname(file.filename);
-      const localFile = file.filepath;
+      const objectName = utils.getFilename() + path.extname(stream.filename);
 
       // 4. 进行上传
-      return await oss.put(objectName, localFile);
+      return await oss.put(objectName, stream);
     } catch (err) {
-      console.log(err);
+      // 必须将上传的文件流消费掉，要不然浏览器响应会卡死
+      await sendToWormhole(stream);
+      throw err;
     }
   }
 }
