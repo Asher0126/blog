@@ -80,6 +80,27 @@ export const constantRouterMap = [
     }]
   },
 
+  {
+    path: '/post',
+    component: Layout,
+    redirect: '/post',
+    name: 'post',
+    meta: { title: '文章管理', icon: 'example' },
+    children: [{
+      path: '',
+      name: 'post-index',
+      meta: { title: '文章列表', icon: 'example' },
+      component: () => import('@/views/post/index')
+    },
+    {
+      path: 'add',
+      name: 'post-add',
+      hidden: true,
+      meta: { title: '新增文章', icon: 'example' },
+      component: () => import('@/views/post/detail')
+    }]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]
 
