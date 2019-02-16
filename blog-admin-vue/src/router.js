@@ -52,6 +52,20 @@ export const constantRouterMap = [
     }]
   },
 
+  {
+    path: '/type',
+    component: Layout,
+    redirect: '/type',
+    name: 'type',
+    meta: { title: '分类管理', icon: 'example' },
+    children: [{
+      path: '',
+      name: 'type-index',
+      meta: { title: '分类列表', icon: 'example' },
+      component: () => import('@/views/type/index')
+    }]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]
 
