@@ -66,6 +66,20 @@ export const constantRouterMap = [
     }]
   },
 
+  {
+    path: '/tag',
+    component: Layout,
+    redirect: '/tag',
+    name: 'tag',
+    meta: { title: '标签管理', icon: 'example' },
+    children: [{
+      path: '',
+      name: 'tag-index',
+      meta: { title: '标签列表', icon: 'example' },
+      component: () => import('@/views/tag/index')
+    }]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]
 
