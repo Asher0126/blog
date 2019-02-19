@@ -91,12 +91,17 @@ export const constantRouterMap = [
       name: 'post-index',
       meta: { title: '文章列表', icon: 'example' },
       component: () => import('@/views/post/index')
-    },
-    {
+    }, {
       path: 'add',
       name: 'post-add',
       hidden: true,
       meta: { title: '新增文章', icon: 'example' },
+      component: () => import('@/views/post/detail')
+    }, {
+      path: 'edit',
+      name: 'post-edit',
+      hidden: true,
+      meta: { title: '修改文章', icon: 'example' },
       component: () => import('@/views/post/detail')
     }]
   },

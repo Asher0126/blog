@@ -73,7 +73,7 @@ export default {
     moveToCurrentTag () {
       const tags = this.$refs.tag
       this.$nextTick(() => {
-        console.warn('tags:', tags, this.visitedViews)
+        // console.warn('tags:', tags, this.visitedViews)
         if (!tags) return
 
         for (const tag of tags) {
@@ -99,6 +99,7 @@ export default {
       })
     },
     closeSelectedTag (view) {
+      console.log('view:', view)
       this.$store.dispatch('delView', view).then(({ visitedViews }) => {
         if (this.isActive(view)) {
           const latestView = visitedViews.slice(-1)[0]

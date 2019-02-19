@@ -8,37 +8,71 @@
       <!-- 分类信息的无限级联：目前最多不超过2级 -->
       <el-form-item label="所属分类：" prop="type_id">
         <el-cascader
-          :options="options"
-          v-model="selectedOptions"
+          :options="typeOptions"
+          v-model="typeValue"
+          :props="{
+            value: 'id',
+            label: 'title'
+          }"
           @change="handleTypeChange"/>
       </el-form-item>
 
       <!-- 给文章贴标签 -->
       <el-form-item class="tag-wrapper" label="贴标签：" prop="tag_id">
-        <el-tag
-          v-for="tag in tags"
-          :key="tag.name"
-          :type="tag.type"
-          closable>
-          {{ tag.name }}
-        </el-tag>
-        <el-input v-model="temp.tag_id" placeholder="请输入标签名称" @keydown="handleEnterDown"/>
+        <el-select
+          v-model="temp.tag_id"
+          multiple
+          filterable
+          allow-create
+          default-first-option
+          placeholder="请选择文章标签">
+          <el-option
+            v-for="item in tags"
+            :key="item.id"
+            :label="item.title"
+            :value="item.id"/>
+        </el-select>
       </el-form-item>
 
       <el-form-item label="文章内容：" prop="content">
-        <el-input v-model="temp.content" type="textarea" placeholder="请输入标签名称"/>
+        <!-- <el-input v-model="temp.content" type="textarea" placeholder="请输入标签名称"/> -->
+        <mavon-editor v-model="temp.content"/>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="handleClose">取消</el-button>
       <el-button type="warning" @click="handleClose">保存草稿</el-button>
-      <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">确定</el-button>
+      <el-button type="primary" @click="status === 'add' ? createData() : updateData()">确定</el-button>
     </div>
   </div>
 </template>
 
 <script>
+/**
+ * 需要的接口：
+ *  文本编辑器
+ *
+ *  添加文章：
+ *  1. 获取分类信息
+ *  2. 获取标签信息
+ *  3. 保存文章接口
+ *
+ *  修改文章：
+ *  1. 获取文章信息
+ *  2. 获取分类和标签信息
+ *  3. 修改文章接口
+ *
+ *  保存到草稿：
+ *  1. 走添加，但是状态是草稿箱
+ */
 import { getPostDetail, createPost, updatePost } from '@/api/post'
+import { getTypeList } from '@/api/type'
+import { getTagList } from '@/api/tag'
+import Vue from 'vue'
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+Vue.use(mavonEditor)
+
 export default {
   data () {
     return {
@@ -46,235 +80,54 @@ export default {
         id: undefined,
         title: '',
         type_id: '',
-        tag_id: '',
+        tag_id: [],
         content: ''
       },
       rules: {
         title: [{ required: true, message: '请输入分类名称', trigger: 'change' }]
       },
-      options: [{
-        value: 'zhinan',
-        label: '指南',
-        children: [{
-          value: 'shejiyuanze',
-          label: '设计原则',
-          children: [{
-            value: 'yizhi',
-            label: '一致'
-          }, {
-            value: 'fankui',
-            label: '反馈'
-          }, {
-            value: 'xiaolv',
-            label: '效率'
-          }, {
-            value: 'kekong',
-            label: '可控'
-          }]
-        }, {
-          value: 'daohang',
-          label: '导航',
-          children: [{
-            value: 'cexiangdaohang',
-            label: '侧向导航'
-          }, {
-            value: 'dingbudaohang',
-            label: '顶部导航'
-          }]
-        }]
-      }, {
-        value: 'zujian',
-        label: '组件',
-        children: [{
-          value: 'basic',
-          label: 'Basic',
-          children: [{
-            value: 'layout',
-            label: 'Layout 布局'
-          }, {
-            value: 'color',
-            label: 'Color 色彩'
-          }, {
-            value: 'typography',
-            label: 'Typography 字体'
-          }, {
-            value: 'icon',
-            label: 'Icon 图标'
-          }, {
-            value: 'button',
-            label: 'Button 按钮'
-          }]
-        }, {
-          value: 'form',
-          label: 'Form',
-          children: [{
-            value: 'radio',
-            label: 'Radio 单选框'
-          }, {
-            value: 'checkbox',
-            label: 'Checkbox 多选框'
-          }, {
-            value: 'input',
-            label: 'Input 输入框'
-          }, {
-            value: 'input-number',
-            label: 'InputNumber 计数器'
-          }, {
-            value: 'select',
-            label: 'Select 选择器'
-          }, {
-            value: 'cascader',
-            label: 'Cascader 级联选择器'
-          }, {
-            value: 'switch',
-            label: 'Switch 开关'
-          }, {
-            value: 'slider',
-            label: 'Slider 滑块'
-          }, {
-            value: 'time-picker',
-            label: 'TimePicker 时间选择器'
-          }, {
-            value: 'date-picker',
-            label: 'DatePicker 日期选择器'
-          }, {
-            value: 'datetime-picker',
-            label: 'DateTimePicker 日期时间选择器'
-          }, {
-            value: 'upload',
-            label: 'Upload 上传'
-          }, {
-            value: 'rate',
-            label: 'Rate 评分'
-          }, {
-            value: 'form',
-            label: 'Form 表单'
-          }]
-        }, {
-          value: 'data',
-          label: 'Data',
-          children: [{
-            value: 'table',
-            label: 'Table 表格'
-          }, {
-            value: 'tag',
-            label: 'Tag 标签'
-          }, {
-            value: 'progress',
-            label: 'Progress 进度条'
-          }, {
-            value: 'tree',
-            label: 'Tree 树形控件'
-          }, {
-            value: 'pagination',
-            label: 'Pagination 分页'
-          }, {
-            value: 'badge',
-            label: 'Badge 标记'
-          }]
-        }, {
-          value: 'notice',
-          label: 'Notice',
-          children: [{
-            value: 'alert',
-            label: 'Alert 警告'
-          }, {
-            value: 'loading',
-            label: 'Loading 加载'
-          }, {
-            value: 'message',
-            label: 'Message 消息提示'
-          }, {
-            value: 'message-box',
-            label: 'MessageBox 弹框'
-          }, {
-            value: 'notification',
-            label: 'Notification 通知'
-          }]
-        }, {
-          value: 'navigation',
-          label: 'Navigation',
-          children: [{
-            value: 'menu',
-            label: 'NavMenu 导航菜单'
-          }, {
-            value: 'tabs',
-            label: 'Tabs 标签页'
-          }, {
-            value: 'breadcrumb',
-            label: 'Breadcrumb 面包屑'
-          }, {
-            value: 'dropdown',
-            label: 'Dropdown 下拉菜单'
-          }, {
-            value: 'steps',
-            label: 'Steps 步骤条'
-          }]
-        }, {
-          value: 'others',
-          label: 'Others',
-          children: [{
-            value: 'dialog',
-            label: 'Dialog 对话框'
-          }, {
-            value: 'tooltip',
-            label: 'Tooltip 文字提示'
-          }, {
-            value: 'popover',
-            label: 'Popover 弹出框'
-          }, {
-            value: 'card',
-            label: 'Card 卡片'
-          }, {
-            value: 'carousel',
-            label: 'Carousel 走马灯'
-          }, {
-            value: 'collapse',
-            label: 'Collapse 折叠面板'
-          }]
-        }]
-      }, {
-        value: 'ziyuan',
-        label: '资源',
-        children: [{
-          value: 'axure',
-          label: 'Axure Components'
-        }, {
-          value: 'sketch',
-          label: 'Sketch Templates'
-        }, {
-          value: 'jiaohu',
-          label: '组件交互文档'
-        }]
-      }],
-      selectedOptions: [],
-      tags: [
-        { name: '标签一', type: '' },
-        { name: '标签二', type: 'success' },
-        { name: '标签三', type: 'info' },
-        { name: '标签四', type: 'warning' },
-        { name: '标签五', type: 'danger' }
-      ]
+      typeValue: [],
+      typeOptions: [],
+      tags: [],
+      status: 'add'
     }
   },
 
   watch: {
-    visible (val) {
-      if (val) {
-        // 修改的时候，获取详情数据
-        if (this.dialogStatus === 'update') { this.getPostDetail() }
-
-        this.$nextTick(() => {
-          // 清除数据和验证状态
-          this.$refs['dataForm'].resetFields()
-        })
-      }
+    typeValue (val) {
+      // 获取数组最后一个值
+      this.temp.type_id = val[val.length - 1]
     }
   },
 
-  created () {},
+  created () {
+    console.log('this.$route:', this.$route)
+    this.init()
+  },
 
   methods: {
+    /**
+     * init
+     */
+    async init () {
+      // 确认是新增，还是修改
+      this.status = this.$route.name === 'post-add' ? 'add' : 'edit'
+      console.log('init:', this.status, this.$route.name)
+
+      // 获取分类配置项
+      const type = await getTypeList()
+      this.typeOptions = type.data
+
+      // 获取已有的标签
+      const tag = await getTagList()
+      this.tags = tag.data
+
+      // 如果是修改，则获取修改的参数，并获取远程数据
+      if (this.status === 'edit') {
+        this.id = this.$route.query.id
+        await this.getPostDetail()
+      }
+    },
     /**
      * 回车按键按下
      */
@@ -293,7 +146,10 @@ export default {
     refreshFormData () {
       this.temp = {
         id: undefined,
-        title: undefined
+        title: undefined,
+        type_id: [],
+        tag_id: [],
+        content: ''
       }
     },
     /**
@@ -303,23 +159,55 @@ export default {
       // console.log('getPostDetail', this.id)
       const result = await getPostDetail(this.id)
 
-      // 只赋值登录名，密码不用
       this.temp.title = result.title
+      this.typeValue = [result.type_id]
+      this.temp.content = result.content
+      result.tags.forEach(v => {
+        this.temp.tag_id.push(v.id)
+      })
+    },
+    /**
+     * 判断是否是当前路由
+     */
+    isActive (route) {
+      return route.path === this.$route.path
+    },
+    /**
+     * 添加 或者 修改完成，跳转到首页
+     */
+    goIndex () {
+      // 2. 跳转到文章列表
+      this.$router.push({ name: 'post-index' })
+      // 3. 关闭当前页签
+      const view = this.$route
+      this.$store.dispatch('delView', view).then(({ visitedViews }) => {
+        if (this.isActive(view)) {
+          const latestView = visitedViews.slice(-1)[0]
+          if (latestView) {
+            this.$router.push(latestView)
+          } else {
+            this.$router.push('/')
+          }
+        }
+      })
     },
     /**
      * 发送请求，添加数据
      */
     createData () {
+      console.log('add')
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           createPost(this.temp).then(() => {
-            this.handleClose(true) // 添加成功，关闭dialog
+            // 1. 提醒
             this.$notify({
               title: '成功',
               message: '创建成功',
               type: 'success',
               duration: 2000
             })
+            // 2. 去首页
+            setTimeout(() => this.goIndex(), 2000)
           })
         }
       })
@@ -328,6 +216,7 @@ export default {
      * 修改数据
      */
     updateData () {
+      console.log('edit')
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp, { id: this.id })
@@ -341,6 +230,8 @@ export default {
               duration: 2000
             })
           })
+          // 2. 去首页
+          setTimeout(() => this.goIndex(), 2000)
         }
       })
     },

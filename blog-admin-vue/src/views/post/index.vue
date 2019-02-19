@@ -24,12 +24,15 @@
       </el-table-column>
       <el-table-column label="归属分类" align="center" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.type_id }}</span>
+          <span v-if="scope.row.type">{{ scope.row.type.title }}</span>
         </template>
       </el-table-column>
       <el-table-column label="标签" align="center" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.type_id }}</span>
+          <!-- <span>{{ scope.row.type_id }}</span> -->
+          <div class="tag-wrapper">
+            <el-tag v-for="item in scope.row.tags" :key="item.id">{{ item.title }}</el-tag>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="阅读数" align="center" width="150">
@@ -39,8 +42,8 @@
       </el-table-column>
       <el-table-column label="状态" align="center" width="150">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.active === 1" type="success">启用</el-tag>
-          <el-tag v-else-if="scope.row.active === 0" type="danger">禁用</el-tag>
+          <el-tag v-if="scope.row.active === 1" type="success">已发布</el-tag>
+          <el-tag v-else-if="scope.row.active === 0" type="danger">草稿箱</el-tag>
           <el-tag v-else type="success">未知状态</el-tag>
         </template>
       </el-table-column>
@@ -52,15 +55,15 @@
       <el-table-column label="操作" align="left" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button v-if="scope.row.active === 1" size="mini" type="danger" @click="handleModifyStatus(scope.row, 0)">禁用</el-button>
-          <el-button v-if="scope.row.active === 0" size="mini" type="success" @click="handleModifyStatus(scope.row, 1)">启用</el-button>
+          <el-button v-if="scope.row.active === 1" size="mini" type="danger" @click="handleModifyStatus(scope.row, 0)">转草稿箱</el-button>
+          <el-button v-if="scope.row.active === 0" size="mini" type="success" @click="handleModifyStatus(scope.row, 1)">发布</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
-    <detail :visible="visible" :dialog-status="dialogStatus" :id="id" @close="handleClose"/>
+    <!-- <detail :visible="visible" :dialog-status="dialogStatus" :id="id" @close="handleClose"/> -->
   </div>
 </template>
 
@@ -117,7 +120,7 @@ export default {
     async handleModifyStatus (row, active) {
       // 禁用
       if (active === 0) {
-        this.$confirm('确定要禁用？', '温馨提示', {
+        this.$confirm('确定要存为草稿箱吗？', '温馨提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -144,9 +147,7 @@ export default {
      * 展示修改dialog
      */
     handleUpdate (row) {
-      this.id = row.id
-      this.dialogStatus = 'update'
-      this.visible = true
+      this.$router.push({ name: 'post-edit', query: { id: row.id }})
     },
     /**
      * 关闭dialog
