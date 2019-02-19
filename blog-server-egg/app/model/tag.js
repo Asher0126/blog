@@ -2,7 +2,7 @@
 
 module.exports = app => {
   const { STRING, INTEGER, DATE, TINYINT } = app.Sequelize;
-  console.log(app.model.define);
+  // console.log(app.model.define);
 
   const Tag = app.model.define('tag', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
@@ -11,6 +11,10 @@ module.exports = app => {
     created_at: DATE,
     updated_at: DATE,
   });
+
+  Tag.associate = function() {
+    app.model.Tag.belongsToMany(app.model.Post, { through: 'PostTag' });
+  };
 
   return Tag;
 };

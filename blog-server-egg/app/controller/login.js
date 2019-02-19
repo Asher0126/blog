@@ -5,7 +5,7 @@ const Controller = require('egg').Controller;
 class LoginController extends Controller {
   async index() {
     // 1. 查询用户信息
-    const data = await this.ctx.service.manager.findByNamePass();
+    const data = await this.ctx.service.manager.findByLogin();
 
     // 2. 判断数据是否存在
     if (data) {

@@ -2,7 +2,7 @@
 
 module.exports = app => {
   const { STRING, INTEGER, DATE } = app.Sequelize;
-  console.log(app.model.define);
+  // console.log(app.model.define);
 
   const User = app.model.define('user', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },

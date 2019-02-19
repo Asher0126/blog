@@ -2,7 +2,7 @@
 
 module.exports = app => {
   const { STRING, INTEGER, DATE, TINYINT } = app.Sequelize;
-  console.log(app.model.define);
+  // console.log(app.model.define);
 
   const Type = app.model.define('type', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
