@@ -9,7 +9,7 @@ module.exports = app => {
   router.post('/api/login', controller.login.index);
   router.get('/api/info', controller.login.info);
 
-  router.post('/upload', controller.index.upload);
+  router.post('/api/upload', controller.index.upload);
 
   router.patch('/api/manager/:id/active/:active', controller.manager.active);
   router.resources('managers', '/api/manager', controller.manager);
