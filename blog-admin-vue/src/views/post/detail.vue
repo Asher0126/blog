@@ -36,13 +36,13 @@
 
       <el-form-item label="文章内容：" prop="content">
         <!-- <el-input v-model="temp.content" type="textarea" placeholder="请输入标签名称"/> -->
-        <mavon-editor v-model="temp.content"/>
+        <mavon-editor ref="md" v-model="temp.content" @imgAdd="handleEditorUpload"/>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="handleClose">取消</el-button>
       <el-button type="warning" @click="handleClose">保存草稿</el-button>
-      <el-button type="primary" @click="status === 'add' ? createData() : updateData()">确定</el-button>
+      <el-button :loading="sureBtnLoading" type="primary" @click="status === 'add' ? createData() : updateData()">确定</el-button>
     </div>
   </div>
 </template>
@@ -65,7 +65,7 @@
  *  保存到草稿：
  *  1. 走添加，但是状态是草稿箱
  */
-import { getPostDetail, createPost, updatePost } from '@/api/post'
+import { getPostDetail, createPost, updatePost, createUpload } from '@/api/post'
 import { getTypeList } from '@/api/type'
 import { getTagList } from '@/api/tag'
 import Vue from 'vue'
@@ -89,7 +89,8 @@ export default {
       typeValue: [],
       typeOptions: [],
       tags: [],
-      status: 'add'
+      status: 'add',
+      sureBtnLoading: false
     }
   },
 
@@ -181,21 +182,14 @@ export default {
       // 3. 关闭当前页签
       const view = this.$route
       this.$store.dispatch('delView', view).then(({ visitedViews }) => {
-        if (this.isActive(view)) {
-          const latestView = visitedViews.slice(-1)[0]
-          if (latestView) {
-            this.$router.push(latestView)
-          } else {
-            this.$router.push('/')
-          }
-        }
+        this.$router.push('/post')
       })
     },
     /**
      * 发送请求，添加数据
      */
     createData () {
-      console.log('add')
+      this.sureBtnLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           createPost(this.temp).then(() => {
@@ -209,6 +203,8 @@ export default {
             // 2. 去首页
             setTimeout(() => this.goIndex(), 2000)
           })
+        } else {
+          this.sureBtnLoading = false
         }
       })
     },
@@ -216,7 +212,7 @@ export default {
      * 修改数据
      */
     updateData () {
-      console.log('edit')
+      this.sureBtnLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp, { id: this.id })
@@ -232,6 +228,8 @@ export default {
           })
           // 2. 去首页
           setTimeout(() => this.goIndex(), 2000)
+        } else {
+          this.sureBtnLoading = false
         }
       })
     },
@@ -240,6 +238,15 @@ export default {
      */
     handleClose (val) {
       this.$emit('close', val)
+    },
+    /**
+     * 图片上传
+     */
+    async handleEditorUpload (pos, file) {
+      const formdata = new FormData()
+      formdata.append('image', file)
+      const url = await createUpload(formdata)
+      this.$refs.md.$img2Url(pos, url)
     }
   }
 }

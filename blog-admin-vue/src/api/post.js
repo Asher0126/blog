@@ -23,6 +23,16 @@ export function createPost (data) {
   })
 }
 
+// 文件上传
+export function createUpload (data) {
+  return request({
+    url: process.env.VUE_APP_BASE_API + '/upload',
+    method: 'post',
+    headers: { 'Content-Type': 'multipart/form-data' },
+    data
+  })
+}
+
 export function updatePost (data) {
   return request({
     url: process.env.VUE_APP_BASE_API + '/post/' + data.id,
