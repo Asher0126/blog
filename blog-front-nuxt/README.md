@@ -1,6 +1,6 @@
 # blog-front-nuxt
 
-> blog base nuxt
+> My marvelous Nuxt.js project
 
 ## Build Setup
 

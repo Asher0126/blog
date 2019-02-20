@@ -1,11 +1,12 @@
 <template>
-  <div class="index">
-    <h3>首页</h3>
-  </div>
+    <section class="container">
+        <h3>hello blog</h3>
+    </section>
 </template>
 
 <script>
-export default {
-  components: {}
-}
+export default {}
 </script>
+
+<style>
+</style>
