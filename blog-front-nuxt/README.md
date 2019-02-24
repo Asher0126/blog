@@ -1,6 +1,6 @@
-# blog-front-nuxt
+# blog-nuxt
 
-> My marvelous Nuxt.js project
+> My wondrous Nuxt.js project
 
 ## Build Setup
 
