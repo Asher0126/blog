@@ -7,7 +7,7 @@ class PostController extends Controller {
     // 获取总条数
     const total = await this.ctx.service.post.count();
     // 获取总数据
-    const data = await this.ctx.service.post.findAll();
+    const data = await this.ctx.service.post.findWithTagAndType();
     this.ctx.body = { errcode: 0, errmsg: '', data: { total, data } };
   }
   async create() {

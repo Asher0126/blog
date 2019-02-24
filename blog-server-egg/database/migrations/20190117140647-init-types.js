@@ -16,6 +16,14 @@ module.exports = {
         type: STRING(30),
         allowNull: false,
       },
+      icon: {
+        type: STRING(30),
+        allowNull: false,
+      },
+      to: {
+        type: STRING(30),
+        allowNull: false,
+      },
       parent_id: {
         type: INTEGER,
         defaultValue: 0,

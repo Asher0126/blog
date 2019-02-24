@@ -17,7 +17,7 @@ module.exports = app => {
 
   Post.associate = function() {
     app.model.Post.belongsTo(app.model.Type, { as: 'type' });
-    app.model.Post.belongsToMany(app.model.Tag, { through: 'post_tags' });
+    app.model.Post.belongsToMany(app.model.Tag, { through: 'post_tag' });
   };
 
   return Post;

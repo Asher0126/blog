@@ -13,7 +13,7 @@ module.exports = app => {
   });
 
   Tag.associate = function() {
-    app.model.Tag.belongsToMany(app.model.Post, { through: 'PostTag' });
+    app.model.Tag.belongsToMany(app.model.Post, { through: 'post_tag' });
   };
 
   return Tag;
